@@ -40,7 +40,7 @@ export class AppController {
 
     if (retryCount > this.maxRetries) {
       Logger.warn(
-        `Emit failure for of burger for ${payload.customer}. Max retries exceeded.`,
+        `Emit failure for burger of ${payload.customer}. Max retries exceeded.`,
       );
 
       this.emitBurgerFailure({ customer: payload.customer });
