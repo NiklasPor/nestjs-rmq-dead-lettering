@@ -20,9 +20,11 @@ export class AppController {
   pattyCount = 0;
 
   constructor(
+    // use the injection token we provided earlier
     @Inject(queueOptions.burger.name) private burgerQueue: ClientProxy,
   ) {}
 
+  // simply throws an error for every third burger
   private makeBurger(patties: number) {
     for (let i = 0; i < patties; i++) {
       this.pattyCount++;
@@ -46,11 +48,16 @@ export class AppController {
       this.makeBurger(payload.patties);
 
       this.emitBurgerSuccess({ customer: payload.customer });
+
+      // acknowledge that we processed the message
       context.getChannelRef().ack(context.getMessage());
     } catch (_) {
       Logger.warn(
         `An error occured while preparing the burger for ${payload.customer}.`,
       );
+
+      // reject message and set reque = false
+      // this will dead letter our message
       context.getChannelRef().reject(context.getMessage(), false);
     }
   }
@@ -70,7 +77,7 @@ export class AppController {
     @Ctx() context: RmqContext,
   ) {
     Logger.error(
-      `Burger for ${payload.customer} couldn't be prepared. Will not retry 🙅‍♂️`,
+      `Burger for ${payload.customer} couldn't be prepared. Will not retry 🔥`,
     );
     context.getChannelRef().ack(context.getMessage());
   }

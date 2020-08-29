@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(
     AppModule,
+    // receive messages from the recovery-queue
     queueOptions.recovery,
   );
   app.listen(() => Logger.log('Recovery worker is listening!'));

@@ -16,7 +16,7 @@ import {
 
 @Controller()
 export class AppController {
-  readonly maxRetries = 3;
+  readonly maxRetries = 4;
 
   constructor(
     @Inject(queueOptions.burger.name) private burgerQueue: ClientProxy,
@@ -35,18 +35,22 @@ export class AppController {
     @Payload() payload: MakeBurgerPayload,
     @Ctx() context: RmqContext,
   ) {
+    // increase the retry count by 1 or set it to 1 if it's undefined
     const retryCount = (payload.retryCount ?? 0) + 1;
 
     if (retryCount > this.maxRetries) {
       Logger.warn(
         `Emit failure for of burger for ${payload.customer}. Max retries exceeded.`,
       );
+
       this.emitBurgerFailure({ customer: payload.customer });
     } else {
       Logger.log(`Emit retry ${retryCount} of burger for ${payload.customer}`);
+
       this.emitMakeBurger({ ...payload, retryCount });
     }
 
+    // always acknowledge the message
     context.getChannelRef().ack(context.getMessage());
   }
 }
