@@ -1,0 +1,39 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/burger-worker/src",
+  "monorepo": true,
+  "root": "apps/burger-worker",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/burger-worker/tsconfig.app.json"
+  },
+  "projects": {
+    "burger-worker": {
+      "type": "application",
+      "root": "apps/burger-worker",
+      "entryFile": "main",
+      "sourceRoot": "apps/burger-worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/burger-worker/tsconfig.app.json"
+      }
+    },
+    "recovery-worker": {
+      "type": "application",
+      "root": "apps/recovery-worker",
+      "entryFile": "main",
+      "sourceRoot": "apps/recovery-worker/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/recovery-worker/tsconfig.app.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    }
+  }
+}
